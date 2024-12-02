@@ -13,6 +13,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.PAT_TOKEN }}
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -37,13 +39,12 @@ jobs:
         fi
 
     - name: Commit and push changes
+      env:
+        PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
         cp -r html-notebooks/* misp-playbooks/
-        git add misp-playbooks/*.html
-        git add README.md
+        git add misp-playbooks/*.html README.md
         git commit -m "Auto-convert notebooks to HTML and update README"
         git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
